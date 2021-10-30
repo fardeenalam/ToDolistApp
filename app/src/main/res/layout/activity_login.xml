@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background_design"
+    tools:context=".loginActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/loginToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/toolbar_design"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="70dp"
+        android:src="@drawable/todologo"
+        android:layout_gravity="center"
+        android:contentDescription="Logo" />
+
+    <EditText
+        android:id="@+id/loginEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter email..."
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="#fff"
+        android:textColorHint="#fff"
+        android:autofillHints="Enter email"
+        android:drawableStart="@drawable/ic_email"
+        android:drawablePadding="10dp"
+        android:padding="10dp"
+        android:inputType="textEmailAddress"
+        android:background="@drawable/inputs"/>
+
+    <EditText
+        android:id="@+id/loginPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter password..."
+        android:layout_margin="10dp"
+        android:textColor="#fff"
+        android:textColorHint="#fff"
+        android:autofillHints="Enter email"
+        android:padding="10dp"
+        android:inputType="textPassword"
+        android:background="@drawable/inputs"
+        android:drawableStart="@drawable/ic_baseline"
+        android:drawablePadding="10dp"/>
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:textAllCaps="false"
+        android:layout_margin="10dp"
+        android:backgroundTint="#fff"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/loginPageQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Don't have an account? Register."
+        android:gravity="center"
+        android:textColor="@color/white"/>
+
+</LinearLayout>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Todolist</string>
+    <string name="todo">TODO</string>
+
+    <string name="enter_email">Enter email</string>
+</resources>
+
