@@ -11,6 +11,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,6 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -59,10 +63,12 @@ class Message {
 }
 
 public class homeActivity extends AppCompatActivity {
-
+    Animation buttonAnim;
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private FloatingActionButton floatingActionButton;
+    Calendar calendar;
+    SimpleDateFormat simpleDateFormat;
 
     private DatabaseReference reference;
     private FirebaseAuth mAuth;
@@ -104,78 +110,22 @@ public class homeActivity extends AppCompatActivity {
 //        getData();
         Log.i("debug", "after setting firebase values");
 
+//        buttonAnim = AnimationUtils.loadAnimation(this, R.anim.rotation);
+
         floatingActionButton = findViewById(R.id.fab);
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                floatingActionButton.animate().rotation(floatingActionButton.getRotation()-180).setDuration(400).start();
                 addTask();
+
             }
         });
 
-//        getBtn = findViewById(R.id.getBtn);
-//        getBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                getData();
-//            }
-//        });
     }
 
-//    private void getData() {
-//        Log.i("debug", "on tapping get Data with onlineuserid = " + onlineUserID);
-//
-//        DatabaseReference  mDatabase = FirebaseDatabase.getInstance().getReference();
-//        mDatabase.child("Tasks").child(onlineUserID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    for(DataSnapshot ds: task.getResult().getChildren()){
-////                        Post p = ds.getValue(Post.class);
-//                        Log.i("debug",ds.toString() );
-//                    }
-////                    String str = String.valueOf(task.getResult().getValue());
-////                    try {
-////                        JSONObject obj = new JSONObject(str);
-////                        Log.d("firebase", str);
-////                        String[] datas = new String[100];
-////                        int i=0;
-////                        Iterator<String> iter = obj.keys();
-////                        while (iter.hasNext()) {
-////                            String key = iter.next();
-////                            try {
-////                                Object value = obj.get(key);
-////                                datas[i] = value.toString();
-////                                i++;
-////                            } catch (JSONException e) {
-////                                // Something went wrong!
-////                            }
-////                        }
-////                        for(int j=0 ; j<i ; j++){
-////                            Log.i("debug", datas[j]);
-////                        }
-////                    } catch (JSONException e) {
-////                        e.printStackTrace();
-////                    }
-//                }
-//            }
-//        });
-////        reference.addValueEventListener(new ValueEventListener() {
-////            @Override
-////            public void onDataChange(@NonNull DataSnapshot snapshot) {
-////                String value = snapshot.getValue(String.class);
-////                Log.i("debug","data here" + value);
-//////                retrieveTv.setText(value);
-////            }
-////
-////            @Override
-////            public void onCancelled(@NonNull DatabaseError error) {
-////                Toast.makeText(homeActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
-////            }
-////        });
-//    }
+
 
     private void addTask() {
         AlertDialog.Builder myDialog = new AlertDialog.Builder(this);
@@ -195,11 +145,13 @@ public class homeActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                floatingActionButton.animate().rotation(floatingActionButton.getRotation()+180).start();
                 dialog.dismiss();
             }
         });
 
         save.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SimpleDateFormat")
             @Override
             public void onClick(View v) {
 
@@ -208,7 +160,8 @@ public class homeActivity extends AppCompatActivity {
                 String mTask = task.getText().toString().trim();
                 String mDescription = description.getText().toString().trim();
                 String id = reference.push().getKey();
-                String date = DateFormat.getDateInstance().format(new Date());
+                String date = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(new Date());
+
 
                 if (TextUtils.isEmpty(mTask)) {
                     task.setError("Task Required");
@@ -283,35 +236,6 @@ public class homeActivity extends AppCompatActivity {
     }
 
 
-    /*@Override
-    protected void onStart(){
-        super.onStart();
-
-        FirebaseRecyclerOptions<Model> options = new FirebaseRecyclerOptions.Builder<Model>()
-                .setQuery(reference, Model.class)
-                .build();
-
-        FirebaseRecyclerAdapter<Model, MyViewHolder> adapter = new FirebaseRecyclerAdapter<Model, MyViewHolder>(options) {
-            @Override
-            protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull Model model) {
-            holder.setDate(model.getDate());
-            holder.setTask(model.getTask());
-            holder.setDescription(model.getDescription());
-            }
-
-            @NonNull
-            @Override
-            public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.retrieved_layout, parent, false);
-                return new MyViewHolder(view);
-            }
-        };
-        recyclerView.setAdapter(adapter);
-        adapter.startListening();
-    }*/
-
-
-
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         View mView;
 
@@ -329,6 +253,7 @@ public class homeActivity extends AppCompatActivity {
         }
         public void setDate(String date){
             TextView dateTextView = mView.findViewById(R.id.dateTv);
+            dateTextView.setText(date);
         }
 
     }
@@ -358,7 +283,7 @@ public class homeActivity extends AppCompatActivity {
                 task = mTask.getText().toString().trim();
                 description = mDescription.getText().toString().trim();
 
-                String date = DateFormat.getDateInstance().format(new Date());
+                String date = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(new Date());
 
                 Model model = new Model(task, description, key, date);
 
